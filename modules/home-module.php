@@ -12,8 +12,7 @@
                     <div class="feeds">
                         <h4 class="title">Novidades</h4>
                         <?php include 'items/post-card.php'?>
-                        <?php
-                            include 'items/card.php'?>
+                        <?php include 'items/card.php'?>
                     </div>
                 </div>
             </div>
