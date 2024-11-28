@@ -1,4 +1,8 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); 
+}
+
 require 'db/connectDB.php';
 
 $conn = new mysqli($servername, $username, $password, $database);
@@ -36,7 +40,6 @@ if (isset($_SESSION['user_id'])) {
     <div class="user-sidebar">
         <div class="user-image">
             <?php
-            // Exibir a foto do usuário, se disponível
             if ($foto) {
                 echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
             } else {
