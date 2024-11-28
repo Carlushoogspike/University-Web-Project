@@ -3,3 +3,69 @@
     translate: 0.3s;
     overflow: hidden;
 }
+
+.join-page-form{
+    height: 100vh;
+}
+
+.join-page-form .login-form{
+    padding: 15vh 0px;
+}
+
+.join-page-form .login-form h4{
+    text-align: center;
+    font-size: 34px;
+    font-weight: 600;
+}
+
+.join-page-form .login-form p{
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.596);
+    font-weight: 500;
+}
+
+.join-page-form .login-form .login{
+    background-color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 15px 30px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.join-page-form .login i, span{
+    margin: 0px;
+    padding: 0px;
+}
+
+.join-page-form .login-form .register{
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 10px 30px;
+    color: black;
+    background-color: white;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    margin: 20px 0px;
+}
+
+.join-page-form .login-form h5{
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.596);
+}
+
+.join-page-form .join-page-wallpaper{
+    background-image: url("../imgs/wall.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100vw;
+    -webkit-box-shadow: inset 0px 0px 98px 0px rgba(0,0,0,1);
+    -moz-box-shadow: inset 0px 0px 98px 0px rgba(0,0,0,1);
+    box-shadow: inset 0px 0px 98px 0px rgba(0,0,0,1);
+}
