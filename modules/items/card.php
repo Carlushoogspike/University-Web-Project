@@ -11,7 +11,7 @@
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere corrupti suscipit dicta maiores in totam eius porro, dolorem distinctio nostrum fugiat earum optio fuga aspernatur, reiciendis odit? Possimus, voluptas perferendis.</p>
         </div>
         <div class="post-image">
-            <img src="page.png" alt="">
+            <img src="" alt="">
         </div>
         <div class="post-buttons">
             <button class="like-button">
