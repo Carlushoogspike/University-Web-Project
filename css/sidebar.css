@@ -1,0 +1,70 @@
+/*User Sidebar*/
+.user-sidebar{
+    font-weight: 600;
+    text-align: center;
+    padding: 20px 0px;
+}
+
+.user-sidebar .user-image{
+    padding: 10px;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    margin: 0px auto;
+}
+
+.user-sidebar .user-image img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid rgb(89, 97, 98);
+}
+
+.user-sidebar .user-id h4{
+    font-size: 20px;
+    font-weight: 600;
+    color: #2b2b2b;
+}
+
+.user-sidebar .user-id p{
+    font-size: 13px;
+    color: rgb(141, 141, 141);
+}
+
+.user-sidebar .user-buttons{
+    padding: 10px;
+    text-align: left;
+}
+
+.user-sidebar .user-buttons ul li{
+    list-style: none;
+    margin: 10px 0px;
+    width: 100%;
+    border-radius: 20px;
+}
+
+.user-sidebar .user-buttons ul li a{
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    padding: 20px 10px;
+    font-size: 17px;
+}
+
+.user-sidebar .user-buttons ul li#selected{
+    background-color: black;
+}
+
+.user-sidebar .user-buttons ul li#selected span{
+    color: white;
+} 
+
+.user-sidebar .user-buttons ul li a span{
+    padding: 10px 20px;
+    color: #404040;
+}
+
+.user-sidebar .user-buttons ul li a i{
+    font-size: 18px;
+    padding-right: 10px;
+}

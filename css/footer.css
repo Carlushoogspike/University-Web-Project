@@ -1,0 +1,26 @@
+footer{
+    background-color: #191919;
+    height: auto;
+}
+
+footer ul{
+    list-style: none;
+    padding: 50px 0px;
+}
+
+footer ul li{
+    padding: 5px;
+}
+
+footer ul li a{
+    color: #c1c1c1;
+    text-decoration: none;
+}
+
+footer .desc{
+    padding: 50px 0px;
+}
+
+footer .desc p{
+    color: #c1c1c1;
+}
