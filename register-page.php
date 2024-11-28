@@ -1,3 +1,60 @@
+<?php
+    session_start();
+    require 'db/connectDB.php';
+
+    $conn = new mysqli($servername, $username, $password, $database);
+
+    if ($conn->connect_error) {
+        die("<strong> Falha de conexão: </strong>" . $conn->connect_error);
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $nome_usuario = $_POST['nome_usuario'];
+        $apelido = $_POST['apelido'];
+        $email = $_POST['email'];
+        $senha = $_POST['senha'];
+    
+        // Validar os dados (exemplo básico)
+        if (empty($nome_usuario) || empty($apelido) || empty($email) || empty($senha)) {
+            $_SESSION['error'] = "Todos os campos são obrigatórios!";
+            header("Location: register-page.php");
+            exit();
+        }
+    
+        // Verificar se o email já está registrado
+        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            $_SESSION['error'] = "Este e-mail já está registrado!";
+            header("Location: register-page.php");
+            exit();
+        }
+    
+        // Hash da senha
+        $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
+    
+        // Inserir dados no banco de dados
+        $stmt = $conn->prepare("INSERT INTO usuarios (apelido, email, senha) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $apelido, $email, $hashed_password);
+    
+        if ($stmt->execute()) {
+            $_SESSION['success'] = "Conta criada com sucesso!";
+            header("Location: login-page.php");
+            exit();
+        } else {
+            $_SESSION['error'] = "Erro ao criar conta. Tente novamente!";
+            header("Location: register-page.php");
+            exit();
+        }
+    
+        // Fechar a conexão
+        $stmt->close();
+        $conn->close();
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -20,30 +77,32 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
                     <h4>Criar conta</h4>
-                        <div class="input-group">
+                        <form action="">
+                            <div class="input-group">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingInput" placeholder="Username">
+                                    <label for="floatingInput">Nome do usuario</label>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">@</span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Username">
+                                    <label for="floatingInputGroup1">Apelido</label>
+                                </div>
+                            </div>
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" placeholder="Username">
-                                <label for="floatingInput">Nome do usuario</label>
+                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <label for="floatingInput">Email</label>
                             </div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">@</span>
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Username">
-                                <label for="floatingInputGroup1">Apelido</label>
+                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <label for="floatingPassword">Senha</label>
                             </div>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput">Email</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                            <label for="floatingPassword">Senha</label>
-                        </div>
-                        <button class="login"><span>Registrar-se</span></button>
-                        <h5>Ou</h5>
-                        <button class="register" onclick="window.location.href='login-page.php';"><span>Entrar</span></button>
+                            <button class="login"><span>Registrar-se</span></button>
+                            <h5>Ou</h5>
+                            <button class="register" onclick="window.location.href='login-page.php';"><span>Entrar</span></button>
+                        </form>
                     </div>
                     <div class="col-md-3"></div>
                 </div>
