@@ -1,12 +1,52 @@
+<?php
+require 'db/connectDB.php';
+
+$conn = new mysqli($servername, $username, $password, $database);
+
+if ($conn->connect_error) {
+    die("Erro de conexão: " . $conn->connect_error);
+}
+
+
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    $sql = "SELECT nome_usuario, apelido, email, foto FROM usuarios WHERE id_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id); 
+    $stmt->execute();
+    $stmt->store_result();
+    
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($nome_usuario, $apelido, $email, $foto);
+        $stmt->fetch();
+    } else {
+        echo "Usuário não encontrado.";
+    }
+
+    $stmt->close();
+} else {
+    header("Location: login-page.php");
+    exit();
+}
+?>
+
 <link rel="stylesheet" href="css/sidebar.css">
 <div class="">
     <div class="user-sidebar">
         <div class="user-image">
-            <img src="imgs/teste.jpg" alt="">
+            <?php
+            // Exibir a foto do usuário, se disponível
+            if ($foto) {
+                echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
+            } else {
+                echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
+            }
+            ?>
         </div>
         <div class="user-id">
-            <h4>Usuario Teste</h4>
-            <p>@userid</p>
+            <h4><?php echo htmlspecialchars($nome_usuario); ?></h4>
+            <p>@<?php echo htmlspecialchars($apelido); ?></p>
         </div>
         <div class="user-buttons">
             <ul>
