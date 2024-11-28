@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-3">
                 <?php
-                    include 'parts/user-info.php';
+                    include 'parts/sidebar.php';
                 ?>
             </div>
             <div class="col-md-7">
