@@ -105,3 +105,130 @@
     margin-right: 5px;
     font-size: 16px;
 }
+
+.message-card{
+    border-radius: 20px;
+    align-items: center;
+    padding: 10px;
+    display: flex;
+    margin: 20px 0px;
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(131, 131, 131, 0.3);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(131, 131, 131, 0.3);
+    box-shadow: 0px 0px 30px 0px rgba(131, 131, 131, 0.3);
+}
+
+.message-card .user-info{
+    min-width: 125px;
+    max-width: 200px;
+}
+
+.message-card h4{
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+.message-card p{
+    font-size: 13px;
+    padding: 0;
+    margin: 0;
+}
+
+.message-card .user-image img{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 0px 15px 0px 0px;
+}
+
+.message-card .last-message{
+    width: 425px;
+}
+
+.message-card .time{
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.message-card .clean-message{
+    border: none;
+    background-color: rgb(255, 68, 68);
+    padding: 12px 17px;
+    border-radius: 10px;
+    color: white;
+}
+
+.message-card .message-box{
+    background-color: #f5f5f5ee;
+    border-radius: 5px;
+    margin-right: 10px;
+    padding: 5px 10px;
+}
+
+.message-card .message-box p{
+    color: #707070ee;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+
+.feeds .friend-card{
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px 0px;
+    display: flex;
+    -webkit-box-shadow: 0px 0px 30px 0px rgba(131, 131, 131, 0.3);
+    -moz-box-shadow: 0px 0px 30px 0px rgba(131, 131, 131, 0.3);
+    box-shadow: 0px 0px 30px 0px rgba(131, 131, 131, 0.3);
+}
+
+
+.feeds .friend-card img{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.feeds .friend-card .profile{
+    width: 100px;
+    margin: 0px 10px;
+    flex: 2;
+}
+
+.feeds .friend-card h4{
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
+    font-weight: 700;
+}
+
+.feeds .friend-card p{
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    color: #5b5b5bee;
+}
+
+.feeds .friend-card button{
+    border: none;
+    background-color: black;
+    color: white;
+    margin-right: 10px;
+    padding: 10px 15px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.feeds .friend-card .remove-friend{
+    background-color: rgb(255, 68, 68);
+}
+
+.feeds .friend-card .reject-friend{
+    background-color: rgb(255, 68, 68);
+}
+
+.feeds .friend-card .add-friend{
+    background-color: lime;
+}
