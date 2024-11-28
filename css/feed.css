@@ -232,3 +232,45 @@
 .feeds .friend-card .add-friend{
     background-color: lime;
 }
+
+/*
+ User config
+*/
+
+.config-block{
+    padding: 20px 15px;
+    border: 2px dashed #d4d4d4; 
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.config-block span{
+    font-size: 20px;
+}
+
+.config-block .block-title{
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.config-block .info{
+    margin-bottom: 10px;
+}
+
+.config-block .change{
+    border: none;
+    background-color: black;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.config-block .input-group{
+    height: 50px;
+}
+
+.config-block .sub-title{
+    font-size: 20px;
+}
