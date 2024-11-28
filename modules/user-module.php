@@ -9,8 +9,8 @@
             <div class="col-md-7">
                 <div class="container">
                     <div class="feeds">
-                        
-                        <h4 class="title">Minhas Postagens</h4>
+                        <div class="user-background" style="background-image: url('imgs/praia.jpg');"></div>
+                        <h4 class="title">Publicações</h4>
                         <?php include 'items/card.php'?>
                     </div>
                 </div>

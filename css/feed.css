@@ -6,6 +6,17 @@
     font-weight: 700;
 }
 
+.feeds .user-background {
+    min-height: 200px;
+    border-radius: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-box-shadow: inset 0px 0px 119px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 119px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 119px 0px rgba(0,0,0,0.75);
+    margin-bottom: 30px;
+}
+
 .share-something{
     margin-top: 40px;
     border-radius: 20px;
