@@ -1,3 +1,59 @@
+<?php
+session_start();
+require 'db/connectDB.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+
+    // Validar se o email e senha não estão vazios
+    if (empty($email) || empty($senha)) {
+        $_SESSION['error'] = "Email e senha são obrigatórios!";
+        header("Location: login-page.php");
+        exit();
+    }
+
+    // Conectar ao banco de dados
+    $conn = new mysqli($servername, $username, $password, $database);
+    if ($conn->connect_error) {
+        die("Erro de conexão: " . $conn->connect_error);
+    }
+
+    // Usar prepared statement para evitar SQL injection
+    $stmt = $conn->prepare("SELECT id_usuario, nome_usuario, senha FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);  // "s" significa string
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+
+        // Depuração: Verificar o valor do hash armazenado
+        echo "Hash da senha armazenada: " . $user['senha'] . "<br>";
+
+        // Verificar se a senha corresponde ao hash armazenado
+        if (password_verify($senha, $user['senha'])) {
+            $_SESSION['user_id'] = $user['id_usuario'];
+            $_SESSION['user_name'] = $user['nome_usuario'];
+            $_SESSION['success'] = "Login bem-sucedido!";
+            header("Location: index.php");
+            exit();
+        } else {
+            $_SESSION['error'] = "Senha incorreta!";
+            header("Location: login-page.php");
+            exit();
+        }
+    } else {
+        $_SESSION['error'] = "Usuário não encontrado!";
+        header("Location: login-page.php");
+        exit();
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -19,17 +75,30 @@
                 <div class="row">
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
+                        <?php
+                            if (isset($_SESSION['error'])) {
+                                echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error'] . '</div>';
+                                unset($_SESSION['error']); // Limpa a mensagem de erro após exibí-la
+                            }
+
+                            if (isset($_SESSION['success'])) {
+                                echo '<div class="alert alert-success" role="alert">' . $_SESSION['success'] . '</div>';
+                                unset($_SESSION['success']); // Limpa a mensagem de sucesso após exibí-la
+                            }
+                        ?>
                         <h4>Entrar</h4>
                         <p>Entre com uma conta já existente em nosso site, caso não tenha uma conta você deverá clicar no botão abaixo escrito "cadastrar-se"</p>
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput">Email</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                            <label for="floatingPassword">Senha</label>
-                        </div>
-                        <button class="login"><span>Entrar</span></button>
+                        <form action="login-page.php" method="POST">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com" required>
+                                <label for="floatingInput">Email</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Password" required>
+                                <label for="floatingPassword">Senha</label>
+                            </div>
+                            <button class="login" type="submit"><span>Entrar</span></button>
+                        </form>
                         <h5>Ou</h5>
                         <button class="register" onclick="window.location.href='register-page.php';"><span>Registrar-se</span></button>
                         </div>
