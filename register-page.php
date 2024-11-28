@@ -1,58 +1,72 @@
 <?php
-    session_start();
-    require 'db/connectDB.php';
+session_start();
+require 'db/connectDB.php';
 
-    $conn = new mysqli($servername, $username, $password, $database);
+$conn = new mysqli($servername, $username, $password, $database);
 
-    if ($conn->connect_error) {
-        die("<strong> Falha de conexão: </strong>" . $conn->connect_error);
+if ($conn->connect_error) {
+    die("<strong>Falha de conexão: </strong>" . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nome_usuario = $_POST['nome_usuario'];
+    $apelido = $_POST['apelido'];
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+
+    if (empty($nome_usuario) || empty($apelido) || empty($email) || empty($senha)) {
+        $_SESSION['error'] = "Todos os campos são obrigatórios!";
+        header("Location: register-page.php");
+        exit();
     }
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $nome_usuario = $_POST['nome_usuario'];
-        $apelido = $_POST['apelido'];
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
-    
-        // Validar os dados (exemplo básico)
-        if (empty($nome_usuario) || empty($apelido) || empty($email) || empty($senha)) {
-            $_SESSION['error'] = "Todos os campos são obrigatórios!";
-            header("Location: register-page.php");
-            exit();
-        }
-    
-        // Verificar se o email já está registrado
-        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        if ($result->num_rows > 0) {
-            $_SESSION['error'] = "Este e-mail já está registrado!";
-            header("Location: register-page.php");
-            exit();
-        }
-    
-        // Hash da senha
-        $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
-    
-        // Inserir dados no banco de dados
-        $stmt = $conn->prepare("INSERT INTO usuarios (apelido, email, senha) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $apelido, $email, $hashed_password);
-    
-        if ($stmt->execute()) {
-            $_SESSION['success'] = "Conta criada com sucesso!";
-            header("Location: login-page.php");
-            exit();
-        } else {
-            $_SESSION['error'] = "Erro ao criar conta. Tente novamente!";
-            header("Location: register-page.php");
-            exit();
-        }
-    
-        // Fechar a conexão
-        $stmt->close();
-        $conn->close();
+    if (strlen($apelido) > 32) {
+        $_SESSION['error'] = "O apelido não pode ter mais de 32 caracteres!";
+        header("Location: register-page.php");
+        exit();
+    }
+
+    if (strlen($senha) > 32) {
+        $_SESSION['error'] = "A senha não pode ter mais de 32 caracteres!";
+        header("Location: register-page.php");
+        exit();
+    }
+
+    if (strlen($email) > 128) {
+        $_SESSION['error'] = "O e-mail não pode ter mais de 128 caracteres!";
+        header("Location: register-page.php");
+        exit();
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $_SESSION['error'] = "Este e-mail já está registrado!";
+        header("Location: register-page.php");
+        exit();
+    }
+
+    $hashed_password = password_hash($senha, PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("INSERT INTO usuarios (nome_usuario, apelido, email, senha) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $nome_usuario, $apelido, $email, $hashed_password);
+
+    if ($stmt->execute()) {
+        $_SESSION['success'] = "Conta criada com sucesso!";
+        header("Location: login-page.php");
+        exit();
+    } else {
+        $_SESSION['error'] = "Erro ao criar conta. Tente novamente!";
+        header("Location: register-page.php");
+        exit();
+    }
+
+    $stmt->close();
+    $conn->close();
+}
 ?>
 
 <!doctype html>
@@ -76,43 +90,59 @@
                 <div class="row">
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
-                    <h4>Criar conta</h4>
-                        <form action="">
+                        <h4>Criar conta</h4>
+                        <form action="register-page.php" method="POST">
+                            <?php
+                                if (isset($_SESSION['error'])) {
+                                    echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error'] . '</div>';
+                                    unset($_SESSION['error']); 
+                                }
+                            ?>
+                            <!-- Nome do usuário -->
                             <div class="input-group">
                                 <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingInput" placeholder="Username">
-                                    <label for="floatingInput">Nome do usuario</label>
+                                    <input type="text" class="form-control" id="floatingInput" name="nome_usuario" placeholder="Nome do usuário"  maxlength="128">
+                                    <label for="floatingInput">Nome do usuário</label>
                                 </div>
                             </div>
+
+                            <!-- Apelido -->
                             <div class="input-group mb-3">
                                 <span class="input-group-text">@</span>
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInputGroup1" placeholder="Username">
+                                    <input type="text" class="form-control" id="floatingInputGroup1" name="apelido" placeholder="Apelido"  maxlength="32">
                                     <label for="floatingInputGroup1">Apelido</label>
                                 </div>
                             </div>
+
+                            <!-- Email -->
                             <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
                                 <label for="floatingInput">Email</label>
                             </div>
+
+                            <!-- Senha -->
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                                <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Password"  maxlength="32">
                                 <label for="floatingPassword">Senha</label>
                             </div>
+
+                            <!-- Registrar -->
                             <button class="login"><span>Registrar-se</span></button>
+
                             <h5>Ou</h5>
-                            <button class="register" onclick="window.location.href='login-page.php';"><span>Entrar</span></button>
+
+                            <!-- Link para a página de login -->
+                            <button class="register" type="button" onclick="window.location.href='login-page.php';"><span>Entrar</span></button>
                         </form>
                     </div>
                     <div class="col-md-3"></div>
                 </div>
             </div>
-
         </div>
         <div class="col-md-6 join-page-wallpaper">
-
         </div>
-    </div>  
+    </div>
 
     <script src="https://kit.fontawesome.com/c3423ba623.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

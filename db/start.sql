@@ -13,9 +13,10 @@ drop table if exists usuarios;
 -- Cria a tabela 'usuarios'
 create table usuarios (
     id_usuario int auto_increment unique not null,
+    nome_usuario varchar(128) not null,
     apelido varchar(32) not null,
     email text not null,
-    senha varchar(40) not null,
+    senha varchar(32) not null,
     foto mediumblob default null,
     primary key (id_usuario)
 );
