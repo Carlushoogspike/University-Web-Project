@@ -35,6 +35,7 @@
 }
 
 .share-something .share-button{
+    border: none;
     background-color: black;
     color: white;
     font-size: 17px;
@@ -273,4 +274,17 @@
 
 .config-block .sub-title{
     font-size: 20px;
+}
+
+
+.small-button{
+    background-color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 15px 30px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    width: 100%;
+    margin: 20px 0px;
 }

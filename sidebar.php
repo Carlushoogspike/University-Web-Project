@@ -29,7 +29,7 @@ if (isset($_SESSION['user_id'])) {
 
     $stmt->close();
 } else {
-    header("Location: pages/login/login-page.php");
+    header("Location: login-page.php");
     exit();
 }
 ?>
@@ -39,10 +39,21 @@ if (isset($_SESSION['user_id'])) {
     <div class="user-sidebar">
         <div class="user-image">
             <?php
-                if ($foto) {
-                    echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
+                // Obtém o caminho da página atual
+                $current_page = $_SERVER['PHP_SELF'];
+
+                if (strpos($current_page, 'processors/') !== false) {
+                    if ($foto) {
+                        echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
+                    } else {
+                        echo '<img src="../imgs/teste.jpg" alt="Foto do usuário">';
+                    }
                 } else {
-                    echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
+                    if ($foto) {
+                        echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
+                    } else {
+                        echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
+                    }
                 }
             ?>
         </div>
@@ -70,6 +81,11 @@ if (isset($_SESSION['user_id'])) {
                 <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'update-page.php' ? 'selected' : ''; ?>">
                     <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'update-page.php' ? '#' : 'update-page.php'; ?>">
                         <span><i class="fa-solid fa-gear"></i> Configurações</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="logout.php">
+                        <span><i class="fa-solid fa-right-from-bracket"></i> Logout</span>
                     </a>
                 </li>
             </ul>

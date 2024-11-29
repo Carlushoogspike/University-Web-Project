@@ -50,7 +50,7 @@
                         $stmtUpdate->bind_param("si", $nickname, $user_id);
                         if ($stmtUpdate->execute()) {
                             $alert = 'success';
-                            $message = "Apelido atualizado com sucesso!";
+                            $message = "Dados atualizados com sucesso";
                         } else {
                             $alert = 'danger';
                             $message = "Erro ao atualizar apelido.";
@@ -69,7 +69,7 @@
                 $stmt->bind_param("si", $name, $user_id);
                 if ($stmt->execute()) {
                     $alert = 'success';
-                    $message = "Nome atualizado com sucesso!";
+                    $message = "Dados atualizados com sucesso";
                 } else {
                     $alert = 'danger';
                     $message = "Erro ao atualizar nome.";
@@ -85,7 +85,7 @@
                 $stmt->bind_param("si", $password, $user_id);
                 if ($stmt->execute()) {
                     $alert = 'success';
-                    $message = "Senha atualizada com sucesso!";
+                    $message = "Dados atualizados com sucesso";
                 } else {
                     $alert = 'danger';
                     $message = "Erro ao atualizar senha.";
@@ -106,7 +106,7 @@
                 $stmt->send_long_data(0, $imageData);
                 if ($stmt->execute()) {
                     $alert = 'success';
-                    $message = "Foto de perfil atualizada com sucesso!";
+                    $message = "Dados atualizados com sucesso";
                 } else {
                     $alert = 'danger';
                     $message = "Erro ao atualizar foto de perfil no banco de dados.";

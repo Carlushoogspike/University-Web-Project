@@ -23,16 +23,42 @@
     $postProcessor = new PostProcessor($conn, $_SESSION['user_id']); //---> Cria uma classe para se referir a classe
     $statusLike = null;
 
-    // Verifica se o formulário de criação de postagem foi enviado
     if (isset($_POST['postar'])) {
         $conteudo = $_POST['conteudo'];
         $statusLike = $postProcessor->createPost($conteudo);
     }
   
-    // Verifica se o botão de curtir foi clicado
     if (isset($_POST['like_post'])) {
         $post_id = $_POST['like_post'];
-        $statusLike = $postProcessor->likePost($post_id);
+        $user_id = $_SESSION['user_id'];
+    
+        // Verificar se o usuário já curtiu o post
+        $check_like_sql = "SELECT * FROM curtidas WHERE id_usuario = $user_id AND id_post = $post_id";
+        $check_like_result = mysqli_query($conn, $check_like_sql);
+    
+        // Aqui faz a verificação se ele já fez a curtida ou não do post
+        if (mysqli_num_rows($check_like_result) == 0) {
+            $insert_like_sql = "INSERT INTO curtidas (id_usuario, id_post) VALUES ($user_id, $post_id)";
+            if (mysqli_query($conn, $insert_like_sql)) {
+                $update_post_sql = "UPDATE postagens SET curtidas = curtidas + 1 WHERE id_post = $post_id";
+                mysqli_query($conn, $update_post_sql);
+            }
+        } else {
+            $delete_like_sql = "DELETE FROM curtidas WHERE id_usuario = $user_id AND id_post = $post_id";
+            if (mysqli_query($conn, $delete_like_sql)) {
+                $update_post_sql = "UPDATE postagens SET curtidas = curtidas - 1 WHERE id_post = $post_id";
+                mysqli_query($conn, $update_post_sql);
+            }
+        }
+    }
+
+    // Função para verificar se o usuário é amigo do autor do post
+    function isFriend($conn, $user_id, $post_author_id) {
+        $query = "SELECT * FROM amigos WHERE 
+                  (id_usuario1 = $user_id AND id_usuario2 = $post_author_id) 
+                  OR (id_usuario1 = $post_author_id AND id_usuario2 = $user_id)";
+        $result = mysqli_query($conn, $query);
+        return mysqli_num_rows($result) > 0;
     }
 ?>
 
@@ -62,12 +88,12 @@
                 <div class="container">
                     <div class="feeds">
 
+                        <div id="alert-message" class="alert alert-success" style="display: none;"></div>
                         <?php if ($statusMessage): ?>
-                            <script>
-                                alert("<?= $statusMessage['message']; ?>");
-                            </script>
+                            <div class="alert alert-success" role="alert">
+                                <p><?= $statusMessage['message'];?></p>
+                            </div>
                         <?php endif; ?>
-
                         <!-- Bloco para o usuario fazer a publicação - Inicio -->
 
                         <h4 class="title">Novidades</h4>
@@ -76,33 +102,35 @@
                               <div class="share-text">
                                   <div class="form-floating">
                                       <textarea class="form-control" placeholder="Deixe um comentário aqui" id="floatingTextarea" name="conteudo"></textarea>
-                                      <label for="floatingTextarea">Compartilhe algo!</label>
+                                      <label for="floatingTextarea">Compartilhe alguma experiencia!</label>
                                   </div>
                               </div>
-                              <button type="submit" class="share-button" name="postar">Publicar</button>
+                              <button type="submit" class="btn btn-dark" name="postar" style="margin-top: 20px;">Publicar</button>
                           </div>
                         </form>
                             
                         <!-- Bloco para o usuario fazer a publicação - Fim -->
 
                         <!-- Bloco de Postagem - Inicio -->
-
                         <div class="container">
-
                             <!-- Inicio das postagens -->
                             <?php
                             // Consulta as postagens no banco de dados
-                                $sql = "SELECT * FROM postagens ORDER BY id_post DESC";
+                                $sql = "SELECT p.*, u.nome_usuario FROM postagens p 
+                                        JOIN usuarios u ON p.id_usuario = u.id_usuario
+                                        ORDER BY p.id_post DESC";
                                 $result = mysqli_query($conn, $sql);
 
                                 while ($post = mysqli_fetch_assoc($result)) {
+                                    // Verifica se o usuário é amigo do autor do post
+                                    $isFriend = isFriend($conn, $_SESSION['user_id'], $post['id_usuario']);
                                     ?>
                                     <div class="post-card">
                                         <div class="post-header">
                                             <img src="imgs/teste.jpg" alt="">
                                             <div class="post-user">
-                                                <h5>Usuário Teste</h5>
-                                                <p class="post-time"><?= date('H:i', strtotime($post['data_post'])) ?> ago</p>
+                                                <h5><?= htmlspecialchars($post['nome_usuario']) ?></h5>
+                                                <p class="post-time"><?= date('d/m/Y H:i', strtotime($post['data_post'])) ?></p>
                                             </div>
                                         </div>
                                         <div class="post-body">
@@ -117,6 +145,13 @@
                                                     <?= $post['curtidas'] ?> <i class="fa-solid fa-heart"></i> Curtir
                                                 </button>
                                             </form>
+                                            <?php if ($post['id_usuario'] == $_SESSION['user_id']): ?>
+                                                <a href="processors/edit-post.php?id=<?= $post['id_post'] ?>" class="btn btn-dark"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                                                <a href="processors/delete-post.php?id=<?= $post['id_post'] ?>" class="btn btn-dark"><i class="fa-solid fa-trash"></i> Excluir</a>
+                                            <?php endif; ?>
+                                            <?php if ($isFriend): ?>
+                                                <span class="badge bg-success">Amigos</span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                     <?php

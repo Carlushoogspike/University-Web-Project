@@ -35,21 +35,6 @@ create table postagens (
     foreign key (id_usuario) references usuarios(id_usuario)
 );
 
--- Verifica se a tabela de comentarios já existe e a remove
-drop table if exists comentarios;
-
--- Cria a tabela 'comentarios'
-create table comentarios (
-    id_comentario int auto_increment unique not null,
-    id_post int not null,
-    id_usuario int not null,
-    comentario text not null,
-    data_comentario timestamp default current_timestamp,
-    primary key (id_comentario),
-    foreign key (id_post) references postagens(id_post),
-    foreign key (id_usuario) references usuarios(id_usuario)
-);
-
 -- Verifica se a tabela de solicitacoes_amizade já existe e a remove
 drop table if exists solicitacoes_amizade;
 
