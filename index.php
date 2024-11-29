@@ -1,15 +1,39 @@
 <?php
-  if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-  }
-  if (!isset($_SESSION['user_id'])) {
-      header("Location: login-page.php");
-      exit();
-  }
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: login-page.php");
+        exit();
+    }
 
     $statusMessage = isset($_SESSION['status_message']) ? $_SESSION['status_message'] : null;
 
     unset($_SESSION['status_message']);
+    
+    include 'db/connectDB.php';
+    include 'processors/PostProcessor.php'; //---> Classe da postagem
+
+
+    $conn = new mysqli($servername, $username, $password, $database);
+    if ($conn->connect_error) {
+        die("Erro de conexão: " . $conn->connect_error);
+    }
+
+    $postProcessor = new PostProcessor($conn, $_SESSION['user_id']); //---> Cria uma classe para se referir a classe
+    $statusLike = null;
+
+    // Verifica se o formulário de criação de postagem foi enviado
+    if (isset($_POST['postar'])) {
+        $conteudo = $_POST['conteudo'];
+        $statusLike = $postProcessor->createPost($conteudo);
+    }
+  
+    // Verifica se o botão de curtir foi clicado
+    if (isset($_POST['like_post'])) {
+        $post_id = $_POST['like_post'];
+        $statusLike = $postProcessor->likePost($post_id);
+    }
 ?>
 
 <!doctype html>
@@ -38,47 +62,72 @@
                 <div class="container">
                     <div class="feeds">
 
-                    <?php if ($statusMessage): ?>
-                        <script>
-                            alert("<?= $statusMessage['message']; ?>");
-                        </script>
-                    <?php endif; ?>
+                        <?php if ($statusMessage): ?>
+                            <script>
+                                alert("<?= $statusMessage['message']; ?>");
+                            </script>
+                        <?php endif; ?>
+
+                        <!-- Bloco para o usuario fazer a publicação - Inicio -->
 
                         <h4 class="title">Novidades</h4>
-                        <div class="share-something">
-                          <div class="share-text">
-                              <div class="form-floating">
-                                  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
-                                  <label for="floatingTextarea">Compartilhe algo!</label>
-                              </div>
-                          </div>
-                          <button class="share-button">Publicar</button>
-                        </div>
-                        <div class="container">
-                          <div class="post-card">
-                              <div class="post-header">
-                                  <img src="imgs/teste.jpg" alt="">
-                                  <div class="post-user">
-                                      <h5>Usuario Teste</h5>
-                                      <p class="post-time">5 horas atrás</p>
+                        <form method="POST">
+                          <div class="share-something">
+                              <div class="share-text">
+                                  <div class="form-floating">
+                                      <textarea class="form-control" placeholder="Deixe um comentário aqui" id="floatingTextarea" name="conteudo"></textarea>
+                                      <label for="floatingTextarea">Compartilhe algo!</label>
                                   </div>
                               </div>
-                              <div class="post-body">
-                                  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere corrupti suscipit dicta maiores in totam eius porro, dolorem distinctio nostrum fugiat earum optio fuga aspernatur, reiciendis odit? Possimus, voluptas perferendis.</p>
-                              </div>
-                              <div class="post-image">
-                                  <img src="" alt="">
-                              </div>
-                              <div class="post-buttons">
-                                  <button class="like-button">
-                                      10 <i class="fa-solid fa-heart"></i> Curtidas
-                                  </button>
-                                  <button class="comment-button">
-                                      <i class="fa-solid fa-message"></i> Comentarios
-                                  </button>
-                              </div>
+                              <button type="submit" class="share-button" name="postar">Publicar</button>
                           </div>
-                      </div>
+                        </form>
+                            
+                        <!-- Bloco para o usuario fazer a publicação - Fim -->
+
+                        <!-- Bloco de Postagem - Inicio -->
+
+                        <div class="container">
+
+                            <!-- Inicio das postagens -->
+                            <?php
+                            // Consulta as postagens no banco de dados
+                                $sql = "SELECT * FROM postagens ORDER BY id_post DESC";
+                                $result = mysqli_query($conn, $sql);
+
+                                while ($post = mysqli_fetch_assoc($result)) {
+                                    ?>
+                                    <div class="post-card">
+                                        <div class="post-header">
+                                            <img src="imgs/teste.jpg" alt="">
+                                            <div class="post-user">
+                                                <h5>Usuário Teste</h5>
+                                                <p class="post-time"><?= date('H:i', strtotime($post['data_post'])) ?> ago</p>
+                                            </div>
+                                        </div>
+                                        <div class="post-body">
+                                            <p><?= htmlspecialchars($post['conteudo']) ?></p>
+                                        </div>
+                                        <div class="post-image">
+                                            <!-- Imagem opcional para o post -->
+                                        </div>
+                                        <div class="post-buttons">
+                                            <form method="POST" style="display:inline;">
+                                                <button type="submit" class="like-button" name="like_post" value="<?= $post['id_post'] ?>">
+                                                    <?= $post['curtidas'] ?> <i class="fa-solid fa-heart"></i> Curtir
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            ?>
+                            <!-- Fim das postagens -->
+
+                        </div>
+
+                        <!-- Bloco de Postagem - Fim -->
+
                     </div>
                 </div>
             </div>
