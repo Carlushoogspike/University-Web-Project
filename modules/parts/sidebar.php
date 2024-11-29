@@ -11,7 +11,6 @@ if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
 
-
 if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
 
