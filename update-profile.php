@@ -24,16 +24,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Atualizar apelido
     if (isset($_POST['nickname']) && !empty(trim($_POST['nickname']))) {
         $nickname = trim($_POST['nickname']);
-        $sql = "UPDATE usuarios SET apelido = ? WHERE id_usuario = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("si", $nickname, $user_id);
-        if ($stmt->execute()) {
-            echo "Apelido atualizado com sucesso!";
+    
+        // Verificar se o apelido já existe no banco
+        $sqlCheck = "SELECT id_usuario FROM usuarios WHERE apelido = ? AND id_usuario != ?";
+        $stmtCheck = $conn->prepare($sqlCheck);
+        $stmtCheck->bind_param("si", $nickname, $user_id);
+        $stmtCheck->execute();
+        $stmtCheck->store_result();
+    
+        if ($stmtCheck->num_rows > 0) {
+            echo "Este apelido já está em uso. Por favor, escolha outro.";
         } else {
-            echo "Erro ao atualizar apelido.";
+            // Atualizar o apelido, já que não é duplicado
+            $sqlUpdate = "UPDATE usuarios SET apelido = ? WHERE id_usuario = ?";
+            $stmtUpdate = $conn->prepare($sqlUpdate);
+            $stmtUpdate->bind_param("si", $nickname, $user_id);
+            if ($stmtUpdate->execute()) {
+                echo "Apelido atualizado com sucesso!";
+            } else {
+                echo "Erro ao atualizar apelido.";
+            }
+            $stmtUpdate->close();
         }
-        $stmt->close();
+        $stmtCheck->close();
     }
+    
 
     // Atualizar nome
     if (isset($_POST['name']) && !empty(trim($_POST['name']))) {
