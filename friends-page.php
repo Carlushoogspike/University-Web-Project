@@ -1,3 +1,6 @@
+<?php
+    include 'processors/friends-processor.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -19,36 +22,81 @@
                     include 'sidebar.php';
                 ?>
             </div>
-            <div class="col-md-4">
-                <div class="container">
-                    <div class="feeds">
-                        <h4 class="title">Amigos</h4>
-                        <!--Friend-->
-                        <div class="friend-card">
-                            <img src="imgs/teste.jpg" alt="">
-                            <div class="profile">
-                                <h4>Carlos</h4>
-                                <p>@carlos</p>
-                            </div>
-                            <button class="send-message"><i class="fa-solid fa-paper-plane"></i></button>
-                            <button class="remove-friend"><i class="fa-solid fa-user-xmark"></i></button>
-                        </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="container">
+                            <div class="feeds">
+                                <h4 class="title">Amigos</h4>
+                                <!--Friend-->
+                                <?php
+                                    $friends = getFriends();
 
+                                    if (count($friends) > 0) {
+                                        foreach ($friends as $friend) {
+                                            echo '<div class="friend-card">';
+                                            echo '<img src="imgs/teste.jpg" alt="">'; 
+                                            echo '<div class="profile">';
+                                            echo '<h4>' . htmlspecialchars($friend['nome_usuario']) . '</h4>';
+                                            echo '<p>@' . htmlspecialchars($friend['apelido']) . '</p>';
+                                            echo '</div>';
+                                            echo '<form method="post" action="processors/remove-friend.php">';
+                                            echo '<input type="hidden" name="friend_id" value="' . $friend['id_usuario'] . '">'; 
+                                            echo '<button type="submit" class="remove-friend"><i class="fa-solid fa-user-xmark"></i> Remover Amigo</button>';
+                                            echo '</form>';
+                                            echo '</div>';
+                                        }
+                                    } else {
+                                        echo "Você não tem amigos ainda.";
+                                    }
+                                ?>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="container">
+                            <div class="feeds">
+                                <h4 class="title">Solicitações</h4>
+                                <?php include 'processors/friend-requests.php'?>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="container">
-                    <div class="feeds">
-                        <h4 class="title">Solicitações</h4>
-                        <div class="friend-card">
-                            <img src="imgs/teste.jpg" alt="">
-                            <div class="profile">
-                                <h4>Carlos</h4>
-                                <p>@carlos</p>
-                            </div>
-                            <button class="add-friend"><i class="fa-solid fa-user-plus"></i></button>
-                            <button class="reject-friend"><i class="fa-solid fa-user-slash"></i></button>
+
+                <div class="col-md-8">
+                    <div class="container">
+                        <div class="feeds">
+                            <h4 class="title">Pessoas na rede</h4>
+                            <?php
+                                $persons = getPersonsInWeb();
+
+                                if (count($persons) > 0) {
+                                    foreach ($persons as $person) {
+                                        echo '<div class="friend-card">';
+                                        
+                                        // Exibe a foto do usuário
+                                        if (!empty($person['foto'])) {
+                                            echo '<img src="data:image/jpeg;base64,' . base64_encode($person['foto']) . '" alt="Foto do usuário">';
+                                        } else {
+                                            echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
+                                        }
+
+                                        echo '<div class="profile">';
+                                        echo '<h4>' . htmlspecialchars($person['nome_usuario']) . '</h4>';
+                                        echo '<p>@' . htmlspecialchars($person['apelido']) . '</p>';
+                                        echo '</div>';
+                                        
+                                        echo '<form action="processors/send-friend-request.php" method="POST">
+                                                <input type="hidden" name="friend_id" value="' . $person['id_usuario'] . '">
+                                                <button type="submit" class="send-invite"><i class="fa-solid fa-paper-plane"></i> Enviar Solicitação</button>
+                                            </form>';
+                                        echo '</div>';
+                                    }
+                                } else {
+                                    echo "Não há pessoas para sugerir.";
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>

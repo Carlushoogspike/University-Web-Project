@@ -6,6 +6,10 @@
       header("Location: login-page.php");
       exit();
   }
+
+    $statusMessage = isset($_SESSION['status_message']) ? $_SESSION['status_message'] : null;
+
+    unset($_SESSION['status_message']);
 ?>
 
 <!doctype html>
@@ -33,6 +37,13 @@
             <div class="col-md-7">
                 <div class="container">
                     <div class="feeds">
+
+                    <?php if ($statusMessage): ?>
+                        <script>
+                            alert("<?= $statusMessage['message']; ?>");
+                        </script>
+                    <?php endif; ?>
+
                         <h4 class="title">Novidades</h4>
                         <div class="share-something">
                           <div class="share-text">
