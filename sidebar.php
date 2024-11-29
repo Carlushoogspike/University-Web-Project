@@ -29,7 +29,7 @@ if (isset($_SESSION['user_id'])) {
 
     $stmt->close();
 } else {
-    header("Location: login-page.php");
+    header("Location: pages/login/login-page.php");
     exit();
 }
 ?>
@@ -39,11 +39,11 @@ if (isset($_SESSION['user_id'])) {
     <div class="user-sidebar">
         <div class="user-image">
             <?php
-            if ($foto) {
-                echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
-            } else {
-                echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
-            }
+                if ($foto) {
+                    echo '<img src="data:image/jpeg;base64,' . base64_encode($foto) . '" alt="Foto do usuário">';
+                } else {
+                    echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
+                }
             ?>
         </div>
         <div class="user-id">
@@ -53,28 +53,24 @@ if (isset($_SESSION['user_id'])) {
         <div class="user-buttons">
             <ul>
                 <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'user-page.php' ? 'selected' : ''; ?>">
-                    <a href="user-page.php">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'user-page.php' ? '#' : 'user-page.php'; ?>">
                         <span><i class="fa-solid fa-user"></i> Meu Perfil</span>
                     </a>
                 </li>
                 <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'selected' : ''; ?>">
-                    <a href="index.php">
-                        <span><i class="fa-solid fa-compass"></i> Novidades</span>
-                    </a>
-                </li>
-                <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'msg-page.php' ? 'selected' : ''; ?>">
-                    <a href="msg-page.php">
-                        <span><i class="fa-solid fa-envelope"></i> Mensagens</span>
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? '#' : 'index.php'; ?>">
+                    <span><i class="fa-solid fa-compass"></i> Novidades</span>
                     </a>
                 </li>
                 <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'friends-page.php' ? 'selected' : ''; ?>">
-                    <a href="friends-page.php">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'friends-page.php' ? '#' : 'friends-page.php'; ?>">
                         <span><i class="fa-solid fa-users"></i> Amigos</span>
                     </a>
                 </li>
-                <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'user-config.php' ? 'selected' : ''; ?>">
-                    <a href="user-config.php">
-                        <span><i class="fa-solid fa-gear"></i> Configurações</span></a>
+                <li id="<?php echo basename($_SERVER['PHP_SELF']) == 'update-page.php' ? 'selected' : ''; ?>">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) == 'update-page.php' ? '#' : 'update-page.php'; ?>">
+                        <span><i class="fa-solid fa-gear"></i> Configurações</span>
+                    </a>
                 </li>
             </ul>
         </div>

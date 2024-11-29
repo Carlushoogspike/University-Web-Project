@@ -1,5 +1,7 @@
 <?php
-session_start();
+  if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+  }
   if (!isset($_SESSION['user_id'])) {
       header("Location: login-page.php");
       exit();
@@ -17,11 +19,60 @@ session_start();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/feed.css">
+    <link rel="stylesheet" href="css/sidebar.css">
   </head>
   <body>
-    <?php 
-        include 'modules/home-module.php';
-    ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <?php
+                    include 'sidebar.php';
+                ?>
+            </div>
+            <div class="col-md-7">
+                <div class="container">
+                    <div class="feeds">
+                        <h4 class="title">Novidades</h4>
+                        <div class="share-something">
+                          <div class="share-text">
+                              <div class="form-floating">
+                                  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                                  <label for="floatingTextarea">Compartilhe algo!</label>
+                              </div>
+                          </div>
+                          <button class="share-button">Publicar</button>
+                        </div>
+                        <div class="container">
+                          <div class="post-card">
+                              <div class="post-header">
+                                  <img src="imgs/teste.jpg" alt="">
+                                  <div class="post-user">
+                                      <h5>Usuario Teste</h5>
+                                      <p class="post-time">5 horas atrás</p>
+                                  </div>
+                              </div>
+                              <div class="post-body">
+                                  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere corrupti suscipit dicta maiores in totam eius porro, dolorem distinctio nostrum fugiat earum optio fuga aspernatur, reiciendis odit? Possimus, voluptas perferendis.</p>
+                              </div>
+                              <div class="post-image">
+                                  <img src="" alt="">
+                              </div>
+                              <div class="post-buttons">
+                                  <button class="like-button">
+                                      10 <i class="fa-solid fa-heart"></i> Curtidas
+                                  </button>
+                                  <button class="comment-button">
+                                      <i class="fa-solid fa-message"></i> Comentarios
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/core.js"></script>
     <script src="https://kit.fontawesome.com/c3423ba623.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

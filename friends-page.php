@@ -11,9 +11,50 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
-    <?php 
-        include 'modules/friends-module.php';
-    ?>
+  <link rel="stylesheet" href="css/feed.css">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <?php
+                    include 'sidebar.php';
+                ?>
+            </div>
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="feeds">
+                        <h4 class="title">Amigos</h4>
+                        <!--Friend-->
+                        <div class="friend-card">
+                            <img src="imgs/teste.jpg" alt="">
+                            <div class="profile">
+                                <h4>Carlos</h4>
+                                <p>@carlos</p>
+                            </div>
+                            <button class="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+                            <button class="remove-friend"><i class="fa-solid fa-user-xmark"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="container">
+                    <div class="feeds">
+                        <h4 class="title">Solicitações</h4>
+                        <div class="friend-card">
+                            <img src="imgs/teste.jpg" alt="">
+                            <div class="profile">
+                                <h4>Carlos</h4>
+                                <p>@carlos</p>
+                            </div>
+                            <button class="add-friend"><i class="fa-solid fa-user-plus"></i></button>
+                            <button class="reject-friend"><i class="fa-solid fa-user-slash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://kit.fontawesome.com/c3423ba623.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>

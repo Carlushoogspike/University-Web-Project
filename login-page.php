@@ -1,59 +1,8 @@
 <?php
-session_start();
-require 'db/connectDB.php';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $senha = $_POST['senha'];
-
-    // Validar se o email e senha não estão vazios
-    if (empty($email) || empty($senha)) {
-        $_SESSION['error'] = "Email e senha são obrigatórios!";
-        header("Location: login-page.php");
-        exit();
-    }
-
-    // Conectar ao banco de dados
-    $conn = new mysqli($servername, $username, $password, $database);
-    if ($conn->connect_error) {
-        die("Erro de conexão: " . $conn->connect_error);
-    }
-
-    // Usar prepared statement para evitar SQL injection
-    $stmt = $conn->prepare("SELECT id_usuario, nome_usuario, senha FROM usuarios WHERE email = ?");
-    $stmt->bind_param("s", $email);  // "s" significa string
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-
-        // Depuração: Verificar o valor do hash armazenado
-        echo "Hash da senha armazenada: " . $user['senha'] . "<br>";
-
-        // Verificar se a senha corresponde ao hash armazenado
-        if (password_verify($senha, $user['senha'])) {
-            $_SESSION['user_id'] = $user['id_usuario'];
-            $_SESSION['user_name'] = $user['nome_usuario'];
-            $_SESSION['success'] = "Login bem-sucedido!";
-            header("Location: index.php");
-            exit();
-        } else {
-            $_SESSION['error'] = "Senha incorreta!";
-            header("Location: login-page.php");
-            exit();
-        }
-    } else {
-        $_SESSION['error'] = "Usuário não encontrado!";
-        header("Location: login-page.php");
-        exit();
-    }
-
-    $stmt->close();
-    $conn->close();
-}
+  if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+  }
 ?>
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -78,17 +27,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <?php
                             if (isset($_SESSION['error'])) {
                                 echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error'] . '</div>';
-                                unset($_SESSION['error']); // Limpa a mensagem de erro após exibí-la
+                                unset($_SESSION['error']);
                             }
 
                             if (isset($_SESSION['success'])) {
                                 echo '<div class="alert alert-success" role="alert">' . $_SESSION['success'] . '</div>';
-                                unset($_SESSION['success']); // Limpa a mensagem de sucesso após exibí-la
+                                unset($_SESSION['success']);
                             }
                         ?>
                         <h4>Entrar</h4>
                         <p>Entre com uma conta já existente em nosso site, caso não tenha uma conta você deverá clicar no botão abaixo escrito "cadastrar-se"</p>
-                        <form action="login-page.php" method="POST">
+                        <form action="processors/login-processor.php" method="POST">
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com" required>
                                 <label for="floatingInput">Email</label>
