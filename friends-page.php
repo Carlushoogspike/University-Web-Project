@@ -29,22 +29,28 @@
                             <div class="feeds">
                                 <h4 class="title">Amigos</h4>
                                 <!--Friend-->
+
                                 <?php
                                     $friends = getFriends();
 
                                     if (count($friends) > 0) {
                                         foreach ($friends as $friend) {
+                                            echo '<a href="profile.php?id_usuario=' . $friend['id_usuario'] . '" class="friend-link">';
                                             echo '<div class="friend-card">';
-                                            echo '<img src="imgs/teste.jpg" alt="">'; 
-                                            echo '<div class="profile">';
+                                            if (!empty($friends['foto'])) {
+                                                echo '<img src="data:image/jpeg;base64,' . base64_encode($friends['foto']) . '" alt="Foto do usuário">';
+                                            } else {
+                                                echo '<img src="imgs/teste.jpg" alt="Foto do usuário">';
+                                            }                                            echo '<div class="profile">';
                                             echo '<h4>' . htmlspecialchars($friend['nome_usuario']) . '</h4>';
                                             echo '<p>@' . htmlspecialchars($friend['apelido']) . '</p>';
                                             echo '</div>';
                                             echo '<form method="post" action="processors/remove-friend.php">';
                                             echo '<input type="hidden" name="friend_id" value="' . $friend['id_usuario'] . '">'; 
-                                            echo '<button type="submit" class="remove-friend"><i class="fa-solid fa-user-xmark"></i> Remover Amigo</button>';
+                                            echo '<button type="submit" class="remove-friend"><i class="fa-solid fa-user-xmark"></i></button>';
                                             echo '</form>';
                                             echo '</div>';
+                                            echo '</a>';
                                         }
                                     } else {
                                         echo "Você não tem amigos ainda.";
@@ -75,7 +81,6 @@
                                     foreach ($persons as $person) {
                                         echo '<div class="friend-card">';
                                         
-                                        // Exibe a foto do usuário
                                         if (!empty($person['foto'])) {
                                             echo '<img src="data:image/jpeg;base64,' . base64_encode($person['foto']) . '" alt="Foto do usuário">';
                                         } else {

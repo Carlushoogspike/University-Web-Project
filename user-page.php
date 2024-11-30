@@ -7,6 +7,8 @@
       header("Location: login-page.php");
       exit();
   }
+
+  include 'processors/user-processor.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -40,7 +42,6 @@
                             </div>
                         </div>
                         <?php
-                            include 'processors/user-processor.php';
                             if (isset($_SESSION['user_id'])) {
                                 obterPostagens($_SESSION['user_id']);
                             } else {

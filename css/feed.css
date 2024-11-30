@@ -11,6 +11,7 @@
     border-radius: 30px;
     background-repeat: no-repeat;
     background-position: center;
+    background-color: #3f3f3f;
     -webkit-box-shadow: inset 0px 0px 119px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: inset 0px 0px 119px 0px rgba(0,0,0,0.75);
     box-shadow: inset 0px 0px 119px 0px rgba(0,0,0,0.75);
@@ -75,7 +76,7 @@
 .post-card .post-header img{
     width: 64px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: 30%;
     margin: 0px 15px 0px 0px;
 }
 
@@ -138,7 +139,7 @@
 .message-card .user-image img{
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 30%;
     margin: 0px 15px 0px 0px;
 }
 
@@ -188,13 +189,18 @@
 .feeds .friend-card img{
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 30%;
 }
 
 .feeds .friend-card .profile{
     width: 100px;
     margin: 0px 10px;
     flex: 2;
+}
+
+.feeds a{
+    text-decoration: none;
+    color: #282828;
 }
 
 .feeds .friend-card h4{
@@ -276,7 +282,6 @@
     font-size: 20px;
 }
 
-
 .small-button{
     background-color: black;
     border: none;
@@ -287,4 +292,28 @@
     font-weight: 600;
     width: 100%;
     margin: 20px 0px;
+}
+
+.feeds .user-background .profile-info{
+    padding: 50px;
+    color: white;
+}
+
+.feeds .user-background .profile-info h4{
+    margin: 0;
+    padding: 0;
+    font-weight: 700;
+}
+
+.feeds .user-background .profile-info span{
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    color: #a5a5a5ee;
+}
+
+.feeds .user-background .profile-info img{
+    height: 80px;
+    width: 80px;
+    border-radius: 30%;
 }

@@ -1,7 +1,6 @@
 <?php
-    require './db/connectDB.php'; // Conexão com o banco de dados
+    require './db/connectDB.php';
 
-// Função para obter as postagens do usuário
     function obterPostagens($user_id) {
         global $conn;
 
@@ -10,11 +9,10 @@
                 FROM postagens p
                 JOIN usuarios u ON p.id_usuario = u.id_usuario
                 WHERE p.id_usuario = ?
-                ORDER BY p.data_post DESC"; // Ordena pela data da postagem
+                ORDER BY p.data_post DESC";
 
-        // Prepara a consulta
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("i", $user_id); // Vincula o ID do usuário à consulta
+            $stmt->bind_param("i", $user_id); 
             $stmt->execute();
             $stmt->store_result();
 
@@ -65,4 +63,6 @@
             echo "Erro ao obter postagens.";
         }
     }
+
+    
 ?>

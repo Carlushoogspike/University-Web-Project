@@ -193,5 +193,28 @@
         }
     }
     
+    function getUserData($user_id) {
+        global $conn;
+        
+        $query = "SELECT * FROM usuarios WHERE id_usuario = ?";
+        $stmt = $conn->prepare($query);
+        
+        if ($stmt === false) {
+            die("Erro ao preparar a consulta: " . $conn->error);
+        }
+        
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        
+        $userData = $result->fetch_assoc();
+        
+        $stmt->close();
+        
+        return $userData;
+    }
+    
+    
 
 ?>

@@ -12,20 +12,23 @@
     unset($_SESSION['status_message']);
     
     include 'db/connectDB.php';
-    include 'processors/PostProcessor.php'; //---> Classe da postagem
-
+    include 'processors/PostProcessor.php';
 
     $conn = new mysqli($servername, $username, $password, $database);
     if ($conn->connect_error) {
         die("Erro de conexão: " . $conn->connect_error);
     }
 
-    $postProcessor = new PostProcessor($conn, $_SESSION['user_id']); //---> Cria uma classe para se referir a classe
+    $postProcessor = new PostProcessor($conn, $_SESSION['user_id']);
     $statusLike = null;
 
     if (isset($_POST['postar'])) {
         $conteudo = $_POST['conteudo'];
         $statusLike = $postProcessor->createPost($conteudo);
+
+        // Após criar a postagem, redireciona para evitar o reenvio do formulário.
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
     }
   
     if (isset($_POST['like_post'])) {
@@ -50,6 +53,8 @@
                 mysqli_query($conn, $update_post_sql);
             }
         }
+
+        header("Location: " . $_SERVER['PHP_SELF']);
     }
 
     // Função para verificar se o usuário é amigo do autor do post
