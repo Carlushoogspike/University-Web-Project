@@ -49,7 +49,8 @@
         global $conn;
         
         $userID = $_SESSION["user_id"];
-
+    
+        // Modificamos a consulta para verificar se já existe uma solicitação pendente
         $sql = "SELECT u.id_usuario, u.nome_usuario, u.apelido, u.foto
                 FROM usuarios u
                 WHERE u.id_usuario != ? 
@@ -57,19 +58,26 @@
                     SELECT id_usuario2 FROM amigos WHERE id_usuario1 = ?
                     UNION
                     SELECT id_usuario1 FROM amigos WHERE id_usuario2 = ?
+                )
+                AND u.id_usuario NOT IN (
+                    SELECT id_usuario_destinatario FROM solicitacoes_amizade 
+                    WHERE id_usuario_requisitante = ? AND status = 'pendente'
+                    UNION
+                    SELECT id_usuario_requisitante FROM solicitacoes_amizade 
+                    WHERE id_usuario_destinatario = ? AND status = 'pendente'
                 )";
-
+    
         $stmt = $conn->prepare($sql);
         if ($stmt === false) {
             die("Erro ao preparar a consulta: " . $conn->error);
         }
-
-        $stmt->bind_param("iii", $userID, $userID, $userID);
-
+    
+        $stmt->bind_param("iiiii", $userID, $userID, $userID, $userID, $userID);
+    
         $stmt->execute();
-
+    
         $result = $stmt->get_result();
-
+    
         if ($result->num_rows > 0) {
             $persons = [];
             while ($row = $result->fetch_assoc()) {
@@ -79,9 +87,10 @@
         } else {
             return []; 
         }
-
+    
         $stmt->close();
     }
+    
 
     function sendFriendRequest($userID, $friendID) {
         global $conn;

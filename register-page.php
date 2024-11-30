@@ -60,7 +60,11 @@
                                 <input type="password" class="form-control" id="floatingPassword" name="senha" placeholder="Password"  maxlength="32">
                                 <label for="floatingPassword">Senha</label>
                             </div>
-
+                            <!-- Botão de visualização de senha -->
+                            <div class="form-check mt-2">
+                                <input type="checkbox" id="togglePassword" class="form-check-input">
+                                <label for="togglePassword" class="form-check-label">Mostrar senha</label>
+                            </div>
                             <!-- Registrar -->
                             <button class="login"><span>Registrar-se</span></button>
 
